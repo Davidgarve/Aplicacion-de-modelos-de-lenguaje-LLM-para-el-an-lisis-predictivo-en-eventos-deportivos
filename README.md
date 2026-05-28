@@ -20,7 +20,7 @@ El proceso es predictivo, es decir, el sistema no mira el vuelo del balón para 
 
 El código está dividido en varios cuadernos de Jupyter pensados para ejecutarse en orden. Cada uno documenta una fase del preprocesamiento o una iteración de los experimentos del TFG:
 
-### 1_preprocesamiento.ipynb
+### preprocesamiento.ipynb
 Prepara los datos en bruto para que los modelos puedan digerirlos. 
 * Agrupa las 9 zonas originales de la portería en un sistema más simple de 3 columnas (Izquierda, Centro, Derecha) para centrarnos en la lateralidad.
 * Aplica recortes y rellenos (padding) temporales para obligar a que todos los vídeos duren exactamente 64 frames, asegurando que el instante del impacto nunca se pierda.
@@ -31,21 +31,21 @@ Este cuaderno es el motor visual del proyecto y el que genera las figuras para l
 * Contiene el algoritmo que divide los 64 frames en las 4 fases biomecánicas (carrera, planta, impacto, seguimiento) muestreando solo los fotogramas clave para no saturar al VLM.
 * Funciona como entorno de pruebas para calibrar el nivel de padding ideal y generar las tiras secuenciales de depuración visual.
 
-### 2_iteracion1_2.ipynb
+### iteracion1_2.ipynb
 Primeras pruebas para ver cuánto detalle anatómico entienden los modelos.
 * La Iteración 1 intenta sacar microdetalles (ángulos de flexión exactos, rotaciones de tobillo), pero comprobamos que el vídeo se comprime demasiado para que sea fiable.
 * La Iteración 2 cambia a un enfoque macro-gestual: le pedimos al modelo que mire cosas más generales como la inclinación de todo el torso o la inercia del cuerpo, lo cual funcionó bastante mejor.
 
-### 3_iteracion3.ipynb
+### iteracion3.ipynb
 Pruebas para intentar corregir las alucinaciones espaciales del VLM.
 * Procesamos los frames con YOLO-Pose para superponer un esqueleto 2D sobre el jugador. Esto ayuda a la red neuronal a no despistarse con la ropa o el fondo del estadio y a centrarse en los cruces articulares.
 
-### 4_iteracion4_5.ipynb
+### iteracion4_5.ipynb
 Actualización a modelos más pesados (Qwen-3.5-VL 8B y Llama 3.1 8B).
 * Comprobamos si las variables cerradas que no aportan información se pueden eliminar sin perder precisión. 
 * Separamos la evaluación del motor de visión y el de texto para ver quién falla realmente: si el VLM no ve bien el gesto o si el LLM se inventa la predicción al leerlo.
 
-### 5_iteracion6.ipynb
+### iteracion6.ipynb
 La auditoría final del sistema.
 * Convertimos todos los JSON de las memorias visuales en tablas normales (variables categóricas, confianza, visibilidad).
 * Entrenamos modelos clásicos de Machine Learning (Regresión Logística y Random Forest) sobre esas tablas para ver el límite real de predicción sin usar LLMs en el último paso.
